@@ -1,0 +1,5 @@
+websocket-client
+pandas
+ta
+numpy
+requests
