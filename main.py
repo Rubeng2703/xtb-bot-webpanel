@@ -1,35 +1,15 @@
-import websocket
-import json
-from config import XTB_LOGIN, XTB_PASSWORD, XTB_HOST
+import time
 
-class XTBApi:
-    def __init__(self):
-        self.ws = websocket.create_connection(f"wss://{XTB_HOST}/demo")
+from bot import TradingBot
 
-    def login(self):
-        payload = {
-            "command": "login",
-            "arguments": {
-                "userId": XTB_LOGIN,
-                "password": XTB_PASSWORD
-            }
-        }
-        self.ws.send(json.dumps(payload))
-        response = self.ws.recv()
-        return json.loads(response)
-
-    def get_candles(self, symbol="EURUSD", timeframe="M5", count=100):
-        payload = {
-            "command": "getChartLastRequest",
-            "arguments": {
-                "info": {
-                    "period": timeframe,
-                    "start": 0,
-                    "symbol": symbol
-                }
-            }
-        }
-        self.ws.send(json.dumps(payload))
-        response = self.ws.recv()
-        return json.loads(response)
+if __name__ == "__main__":
+    bot = TradingBot()
+    while True:
+        try:
+            bot.ejecutar()
+            print("⏳ Esperando 5 minutos para próxima evaluación...")
+            time.sleep(300)  # Espera 5 minutos entre ejecuciones
+        except Exception as e:
+            print("🛑 Error detectado:", e)
+            time.sleep(60)  # Espera 1 minuto si hubo error
 
